@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block tiltle %} contact us {% endblock %}
+{% block contactactive %}active {% endblock contactactive %}
+{% block css%}
+.in{
+border-radius:3px;
+}
+{% endblock%}
+{% block body %}
+
+<div class="container" style="margin-bottom: 35px;">
+
+    <h1 style="margin-left: 100px; margin-top: revert;">Contact</h1>
+
+    <form id="form" action="/contact/" style="width:500px;" method="post">{% csrf_token %}
+        NAME: <input class="in" type="text" name="name" style="width: 97%;  " placeholder="enter your name" required />
+        </br>
+
+        </br>
+
+        EMAIL : <input class="in" type="email" name="email" style="width: 97%;  " required /></br>
+
+        </br>
+
+        PHONE NO: <input class="in row" type="tel" name="phone" style="width: 97; margin-left: inherit;"
+            required /></br>
+
+        </br>
+
+        MESSAGE: <textarea class="in" type="text" name="message" cols="30" rows="5"
+            style="width: 97%; " required></textarea></br>
+        </br>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+
+
+{% endblock %}

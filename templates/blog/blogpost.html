@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %} blogpost {% endblock %}
+
+
+{% block body %}
+{% load humanize %}
+{% load extras %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="mt-4" style="font-family: 'Times New Roman', Times, serif;">
+                <b>{{post.title}}</b>
+            </h2>
+            <p class="blog-post-meta">{{post.timeStamp}} by <a href="#">{{post.author}}</a></p>
+            <article class="blog-post">
+                <p>{{post.content|safe}}</p>
+            </article>
+            <hr>
+
+            <div class="container bg-light my-4">
+                <strong>
+                    <h4>Comments ({{comments.count}})</h4>
+                </strong>
+                <section class="content-item" id="comments">
+                    <div class="container">
+
+                        {% if user.is_authenticated%}
+                        <form action="/blog/blogcomment/" method="post">{% csrf_token %}
+                            <input type="text" class="form-control" name="comment" placeholder="comment here" required>
+                            <input type="hidden" name="postSno" value="{{post.pid}}">
+                            <input type="hidden" name="parentSno" value="">
+                            <button type="submit" class="btn btn-primary mt-2">submit</button>
+                        </form>
+                        {% else %}
+                        <h6 class="my-3"><i>Please login to post a comment</i></h6>
+                        {% endif %}
+
+
+                    </div>
+
+
+                </section>
+                {% for comment in comments %}
+                <div class="row my-3">
+                    <ul class="media-list my-3">
+                        <li class="media">
+                            <a href="#" class="pull-left">
+                                <img src="/static/image/user1.jpg" alt="user" class="img-circle" style="
+                                width: 35px;
+                                margin: 9px 9px 5px 5px;
+                                border-radius: 50%;
+                            ">
+                            </a>
+                            <div class="media-body">
+                                <span class="text-muted pull-right">
+                                    <small class="text-muted">{{comment.timeStamp| naturaltime}}</small>
+                                </span>
+                                <strong class="text-success">{{comment.user.username}}</strong>
+                                <p>{{comment.comment}}
+                                </p>
+                                <div class="reply mx-0">
+                                    {% if user.is_authenticated %}
+                                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#replyBox{{comment.sno}}" aria-expanded="false"
+                                        aria-controls="replyBox{{comment.sno}}">
+                                        Reply
+                                    </button>
+                                    <div class="collapse" id="replyBox{{comment.sno}}">
+                                        <div class="card card-body my-2">
+                                            <form action="/blog/blogcomment/" method="post">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <label for="comment">Post a reply </label>
+                                                    <input type="text" class="form-control" name="comment"
+                                                        placeholder="Enter comment here">
+                                                    <input type="hidden" name="parentSno" value="{{comment.sno}}">
+                                                </div>
+                                                <input type="hidden" name="postSno" value="{{post.pid}}">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+                                        data-target="#replyBox{{comment.sno}}" aria-expanded="false"
+                                        aria-controls="replyBox{{comment.sno}}">
+                                        Login to reply
+                                    </button>
+                                    {% endif %}
+                                    <div class="replies my-2">
+                                        {% for reply in replyDict|get_val:comment.sno %}
+
+                                        <div class="row my-2">
+                                            <img src="/static/image/user1.jpg" alt="user" class="img-circle" style="
+                                        width: 35px;
+                                       
+                                        border-radius: 50%;
+                                    ">
+                                            {{reply.comment}}...by@
+                                            <strong class="text-primary">{{comment.user.username}}</strong>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+
+
+                    </ul>
+                </div>
+
+                {% endfor %}
+
+            </div>
+        </div>
+
+
+
+
+        <div class="col-md-4">
+            <!-- <div class="p-4 mb-3 bg-light rounded">
+                <h4 class="font-italic">About</h4>
+                <p class="mb-0">This is <em>My Shop</em> blogs. </p>
+            </div> -->
+
+            <div class="p-4">
+                <h4 class="font-italic">Elsewhere</h4>
+                <ol class="list-unstyled">
+                    <li><a href="#">GitHub</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Facebook</a></li>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %} bloghome {% endblock %}
+
+{% block css %}
+.container .row .container .img{
+  height: 250px;
+  width: 200px;
+}
+
+<!-- box-shadow: 0px 5px 7px 0px rgb(83, 83, 88);"  -->
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+  let previews = document.getElementsByClassName('preview');
+  Array.from(previews).forEach((element)=>{
+    element.innerHTML=element.innerText;
+  })
+</script>
+
+{% endblock %}
+
+{% block blogactive %} active {% endblock blogactive %}
+
+
+{% block body %}
+{% load static %}
+
+<div class="container">
+<!-- <div class="col-md-6 my-3"> -->
+  <h2 class="my-3 font-italic">Articles by KDtek:</h2>
+
+  {% for post in allPosts %}
+    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 h-md-250 position-relative" style="box-shadow: -6px 5px 7px 0px #7b7a7a;">
+      <div class="col p-4 d-flex flex-column position-static">
+        <strong class="d-inline-block mb-2 text-primary">post by {{post.author}}</strong>
+        <h3 class="mb-0">{{post.title}}</h3>
+        <div class="mb-1 text-muted">{{post.timeStamp}}</div>
+        <p class="card-text mb-auto"><div class="preview">{{post.content | safe | truncatechars:500 }}</div></p>
+        <div><a href="{{post.slug}}" class="bt btn-primary stretched-link text-decoration-none px-1" style="border-radius: 50px;">Continue reading</a></div>
+      </div>
+      <!-- <div class="col-auto d-none d-lg-block">
+        <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+      </div> -->
+      <div class="container col-auto d-none d-lg-block">
+        <img class="img" style="object-fit: contain;" src="/media/{{post.image}}" alt="kdtek">
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
